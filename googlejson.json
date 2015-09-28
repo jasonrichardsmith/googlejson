@@ -1,0 +1,49 @@
+{
+	"apiVersion":"0.1",
+	"context":"client_context",
+	"id": "1234ABCD",
+	"method": "cars.get",
+	"params": {
+		"color": "yellow"
+	},
+	"data":{
+		"kind": "car",
+		"title": "My cars",
+		"description": "This service shows my cars",
+		"fields": "color, type",
+		"etag": "08FQn8-eil7ImA9WxZbFEwo",
+		"id": "0000001",
+		"lang": "en",
+		"updated": "2010-01-07T19:58:42.949Z",
+		"deleted": false,
+		"currentItemCount": 1,
+		"itemsPerPage": 1,
+		"startIndex": 1,
+		"totalItems": 10,
+		"pageIndex": 1,
+		"totalPages": 10,
+		"selfLink": "https://github.com/jasonrichardsmith/google_json_style/google_json_style.json",
+		"editLink": "https://github.com/jasonrichardsmith/google_json_style/google_json_style.json?edit",
+		"nextLink": "https://github.com/jasonrichardsmith/google_json_style/google_json_style.json?next",
+		"previousLink": "https://github.com/jasonrichardsmith/google_json_style/google_json_style.json?prev",
+		"items":[
+			{
+				"color": "yellow",
+				"type" : "sedan"
+			}
+		]
+	},
+	"error":{
+		"code": 404,
+		"message": "Car Not Found",
+		"errors": [
+			{
+				"message": "Car Not Found",
+				"location": "",
+				"locationType": "",
+				"extendedHelper": "http://url.to.more.details.example.com/",
+				"sendReport": "http://report.example.com/"
+			}
+		]
+	}	
+}

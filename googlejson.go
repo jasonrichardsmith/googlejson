@@ -11,6 +11,8 @@ package googlejson
 
 import (
 	"encoding/json"
+	"errors"
+	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -37,10 +39,10 @@ type Response struct {
 	Params map[string]string `json:"params"`
 
 	// Data holds the actual data that was returned.
-	Data `json:"datai, omitempty"`
+	*Data `json:"datai, omitempty"`
 
 	// Errors to be returned.
-	Error `json:"error, omitempty"`
+	*Error `json:"error, omitempty"`
 }
 
 // Shortcut to create a new Response
@@ -50,14 +52,14 @@ func New() *Response {
 }
 
 // Shortcut to create a response from an http.Response
-func NewFromResponse(r http.Response) (*Response, err) {
+func NewFromResponse(r http.Response) (*Response, error) {
 	res := New()
 	defer r.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return res, err
 	}
-	err := json.UnMarshall(body, res)
+	err = json.Unmarshal(body, res)
 	return res, err
 }
 
@@ -72,8 +74,10 @@ func (r *Response) Copy() *Response {
 	return &nr
 }
 
-// Write the struct to byte[]
+// Write the struct to byte[].
+// SetItemCount will be called prior to writing.
 func (r *Response) Write() ([]byte, error) {
+	r.Data.SetItemCount()
 	return json.Marshal(r)
 }
 
@@ -155,14 +159,14 @@ type Data struct {
 
 // Shortcut to new data object.
 func NewData() *Data {
-	d := Data{Items: make([]interface{})}
+	d := Data{Items: make([]json.RawMessage, 0)}
 	return &d
 }
 
 // Add a single field to the list of fields to be returned.
 func (d *Data) AddField(key string) {
 	fs := d.GetFields()
-	fs = append(fs, []string{key})
+	fs = append(fs, key)
 	d.Fields = strings.Join(fs, ",")
 }
 
@@ -180,7 +184,7 @@ func (d *Data) GetFields() []string {
 
 // Add a single data item to the list of Items to be returned.
 func (d *Data) AddItem(i interface{}) error {
-	js, err := json.Marshall(i)
+	js, err := json.Marshal(i)
 	d.Items = append(d.Items, js)
 	if err != nil {
 		return err
@@ -201,14 +205,14 @@ func (d *Data) ItemsCount() int {
 
 // Retrieve the item at current pointer position.
 func (d *Data) CurrentItem(i interface{}) error {
-	return json.UnMarshall(d.Items[d.item], i)
+	return json.Unmarshal(d.Items[d.item], i)
 }
 
 // Retrieve the next title.
 func (d *Data) NextItem(i interface{}) error {
-	count = d.ItemCount()
+	count := d.ItemsCount()
 	if count == d.item+1 {
-		return error.New("End of items")
+		return errors.New("End of items")
 	}
 	d.item = d.item + 1
 	return d.CurrentItem(i)
@@ -221,20 +225,31 @@ func (d *Data) ResetItems() {
 
 // Error object to be returned.
 type Error struct {
-	Code    int         `json:"code"`
-	Errors  []ErrorItem `json:"errors"`
-	Message string      `json:"message"`
+	// Integer code representing an error code
+	Code int `json:"code"`
+
+	// An array of error message item data.
+	Errors []ErrorItem `json:"errors"`
+
+	// Message for error.
+	Message string `json:"message"`
 }
 
+// Shortcut to create Error.
 func NewError() *Error {
-	er := Error{Errors: make([]ErrorItem)}
-	return er
+	er := Error{Errors: make([]ErrorItem, 0)}
+	return &er
 }
 
+// Details relating to the error being returned.
+// For more details see
+// https://google-styleguide.googlecode.com/svn/trunk/jsoncstyleguide.xml
 type ErrorItem struct {
 	ExtendedHelper string `json:"extendedHelper"`
+	Domains        string `json:"domain"`
 	Location       string `json:"location"`
 	LocationType   string `json:"locationType"`
 	Message        string `json:"message"`
+	Reason         string `json:"reason"`
 	SendReport     string `json:"sendReport"`
 }
