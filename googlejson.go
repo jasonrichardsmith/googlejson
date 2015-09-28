@@ -82,7 +82,7 @@ func (r *Response) WriteToResponse(w http.ResponseWriter) error {
 }
 
 // Data structure holds all information specific to the data in the
-// Response and the dat6a itself
+// Response and the data itself
 type Data struct {
 	// Kind is a name of the entity being returned, such as
 	// cars, orders, customers etc.
@@ -130,27 +130,32 @@ type Data struct {
 	item int
 }
 
+// Shortcut to new data object.
 func NewData() *Data {
 	d := Data{Items: make([]interface{})}
 	return &d
 }
 
+// Add a single field to the list of fields to be returned.
 func (d *Data) AddField(key string) {
 	fs := d.GetFields()
 	fs = append(fs, []string{key})
 	d.Fields = strings.Join(fs, ",")
 }
 
+// Add a list of fields to the list of fields to be returned.
 func (d *Data) AddFields(keys []string) {
 	fs := d.GetFields()
 	fs = append(fs, keys...)
 	d.Fields = strings.Join(fs, ",")
 }
 
+// Get a list of fields.
 func (d *Data) GetFields() []string {
 	return strings.Split(d.Fields, ",")
 }
 
+// Add a single data item to the list of Items to be returned.
 func (d *Data) AddItem(i interface{}) error {
 	js, err := json.Marshall(i)
 	d.Items = append(d.Items, js)
@@ -161,18 +166,22 @@ func (d *Data) AddItem(i interface{}) error {
 	return nil
 }
 
+// Set the item count to the number of Items to be returned.
 func (d *Data) SetItemCount() {
 	d.CurrentItemCount = len(d.Items)
 }
 
+// Get count of current items in the Items list.
 func (d *Data) ItemsCount() int {
 	return len(d.Items)
 }
 
+// Retrieve the item at current pointer position.
 func (d *Data) CurrentItem(i interface{}) error {
 	return json.UnMarshall(d.Items[d.item], i)
 }
 
+// Retrieve the next title.
 func (d *Data) NextItem(i interface{}) error {
 	count = d.ItemCount()
 	if count == d.item+1 {
@@ -182,10 +191,12 @@ func (d *Data) NextItem(i interface{}) error {
 	return d.CurrentItem(i)
 }
 
+// Reset Item pointer to 0.
 func (d *Data) ResetItems() {
 	d.item = 0
 }
 
+// Error object to be returned.
 type Error struct {
 	Code    int         `json:"code"`
 	Errors  []ErrorItem `json:"errors"`
