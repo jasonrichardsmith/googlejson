@@ -1,3 +1,12 @@
+// Copyright 2015 Jason Richard Smith.
+// Use of this source code is governed by a GPL-3
+// license that can be found in the LICENSE file.
+
+// Package googlejson implements json structure defined
+// by the Google JSON Style Guide
+//
+// See the style guide for more details
+// https://google-styleguide.googlecode.com/svn/trunk/jsoncstyleguide.xml
 package googlejson
 
 import (
