@@ -1,5 +1,15 @@
-package gsg
+package googlejson
 
+import (
+	"encoding/json"
+	"net/http"
+	"strings"
+)
+
+/*
+
+
+ */
 type Response struct {
 	APIVersion string            `json:"apiVersion"`
 	Context    string            `json:"context"`
@@ -15,7 +25,7 @@ func New() *Response {
 	return &r
 }
 
-func NewFromResponse(r http.Response) *Response, err {
+func NewFromResponse(r http.Response) (*Response, err) {
 	res := New()
 	defer r.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
@@ -36,19 +46,15 @@ func (r *Response) Copy() *Response {
 }
 
 func (r *Response) Write() ([]byte, error) {
-	if r.Error == nil && r.Data == nil {
-		err := errors.New("Data and error both set to nil")
-		return make([]byte, err)
-	}
-	js, err := json.Marshal(r)
+	return json.Marshal(r)
 }
 
 func (r *Response) WriteToResponse(w http.ResponseWriter) error {
 	b, err := r.Write()
-	w.Write(b)
 	if err != nil {
 		return err
 	}
+	w.Write(b)
 	return nil
 }
 
@@ -83,7 +89,13 @@ func NewData() *Data {
 
 func (d *Data) AddField(key string) {
 	fs := d.GetFields()
-	fs = append(fs, key)
+	fs = append(fs, []string{key})
+	d.Fields = strings.Join(fs, ",")
+}
+
+func (d *Data) AddFields(keys []string) {
+	fs := d.GetFields()
+	fs = append(fs, keys...)
 	d.Fields = strings.Join(fs, ",")
 }
 
@@ -94,21 +106,32 @@ func (d *Data) GetFields() []string {
 func (d *Data) AddItem(i interface{}) error {
 	js, err := json.Marshall(i)
 	d.Items = append(d.Items, js)
-	return err
+	if err != nil {
+		return err
+	}
+	d.SetItemCount()
+	return nil
+}
+
+func (d *Data) SetItemCount() {
+	d.CurrentItemCount = len(d.Items)
 }
 
 func (d *Data) ItemsCount() int {
 	return len(d.Items)
 }
 
+func (d *Data) CurrentItem(i interface{}) error {
+	err := json.UnMarshall(d.Items[d.item], i)
+}
+
 func (d *Data) NextItem(i interface{}) error {
 	count = d.ItemCount()
-	if count == d.item {
+	if count == d.item+1 {
 		return error.New("End of items")
 	}
-	err := json.UnMarshall(d.Items[d.item], i)
 	d.item = d.item + 1
-	return err
+	return d.CurrentItem(i)
 }
 
 func (d *Data) ResetItems() {
@@ -119,6 +142,11 @@ type Error struct {
 	Code    int         `json:"code"`
 	Errors  []ErrorItem `json:"errors"`
 	Message string      `json:"message"`
+}
+
+func NewError() *Error {
+	er := Error{Errors: make([]ErrorItem)}
+	return er
 }
 
 type ErrorItem struct {
