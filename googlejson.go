@@ -20,19 +20,25 @@ import (
 type Response struct {
 	// Version of API being served or received.
 	APIVersion string `json:"apiVersion"`
+
 	// Context is a parameter submitted by requestor
 	// as in an http.Request, this will be returned
 	// to the client for context.
 	Context string `json:"context"`
+
 	// ID is a unique ID assigned to the request
 	// if the API will need to reference a transaction.
 	ID string `json:"id"`
+
 	// Method represents the operation performed.
 	Method string `json:"method"`
+
 	// Params are a list of parameters submitted to the API.
 	Params map[string]string `json:"params"`
+
 	// Data holds the actual data that was returned.
 	Data `json:"datai, omitempty"`
+
 	// Errors to be returned.
 	Error `json:"error, omitempty"`
 }
@@ -87,42 +93,59 @@ type Data struct {
 	// Kind is a name of the entity being returned, such as
 	// cars, orders, customers etc.
 	Kind string `json:"kind"`
+
 	// A list of field being returned.  This is a comma separated
 	// string so helper methods are provided below.
 	Fields string `json:"fields"`
+
 	// Etags are an ID for the version of the data you are viewing
 	// this allows to identify expired data.
 	// More can be read here:
 	// https://developers.google.com/gdata/docs/2.0/reference?csw=1#ResourceVersioning
 	Etag string `json:"etag"`
+
 	// The ID for this request
 	ID string `json:"id"`
+
 	// Language.
 	Lang string `json:"lang"`
+
 	// Last time record was updated
 	Updated string `json:"updated"`
+
 	// Deleted, if this was a delete request did it occur.
 	Deleted bool `json:"deleted"`
+
 	// How many items have returned this request.
 	CurrentItemCount int `json:"currentItemCount"`
+
 	// How many items could be returned in each request.
 	ItemsPerPage int `json:"itemsPerPage"`
+
 	// Where the list begins in the full list of return values.
 	StartIndex int `json:"startIndex"`
+
 	// Total number of Items matching request.
 	TotalItems int `json:"totalItems"`
+
 	// Current page.
 	PageIndex int `json:"pageIndex"`
+
 	// Total number of pages.
 	TotalPages int `json:"totalPages"`
+
 	// Link to next result or result set for paginated results.
 	NextLink string `json:"nextLink"`
+
 	// Link to previous result or result set for paginated results.
 	PreviousLink string `json:"previousLink"`
+
 	// Direct link to current data set.
 	SelfLink string `json:"selfLink"`
+
 	// Link to edit results.
 	EditLink string `json:"editLink"`
+
 	// An array of items -  this is the actual data.
 	Items []json.RawMessage `json:"items"`
 
