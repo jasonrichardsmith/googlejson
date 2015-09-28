@@ -122,7 +122,7 @@ func (d *Data) ItemsCount() int {
 }
 
 func (d *Data) CurrentItem(i interface{}) error {
-	err := json.UnMarshall(d.Items[d.item], i)
+	return json.UnMarshall(d.Items[d.item], i)
 }
 
 func (d *Data) NextItem(i interface{}) error {
