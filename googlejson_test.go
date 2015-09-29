@@ -7,11 +7,11 @@ package googlejson
 import (
 	"bytes"
 	"encoding/json"
-	//"fmt"
-	"github.com/davecgh/go-spew/spew"
+	"fmt"
+	//"github.com/davecgh/go-spew/spew"
 	"io/ioutil"
 	"log"
-	"reflect"
+	//"reflect"
 	//"net/http/httptest"
 	"net/http"
 	"os"
@@ -102,11 +102,14 @@ func TestNewFromResponse(t *testing.T) {
 		log.Fatal(err)
 	}
 	response.Data.Items[0] = buf.Bytes()
-	spew.Dump(reflect.DeepEqual(response.Data.Items, sample_struct.Data.Items))
-	spew.Dump(string(sample_struct.Data.Items[0]))
-	//spew.Dump(sample_struct)
 	if response.APIVersion != sample_struct.APIVersion {
+		t.Error("Test failed")
+	}
+}
 
+func TestWrite(t *testing.T) {
+	b, _ := sample_struct.Write()
+	if string(b) != string(sample_json) {
 		t.Error("Test failed")
 	}
 }

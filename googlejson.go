@@ -138,17 +138,17 @@ type Data struct {
 	// Total number of pages.
 	TotalPages int `json:"totalPages"`
 
-	// Link to next result or result set for paginated results.
-	NextLink string `json:"nextLink"`
-
-	// Link to previous result or result set for paginated results.
-	PreviousLink string `json:"previousLink"`
-
 	// Direct link to current data set.
 	SelfLink string `json:"selfLink"`
 
 	// Link to edit results.
 	EditLink string `json:"editLink"`
+
+	// Link to next result or result set for paginated results.
+	NextLink string `json:"nextLink"`
+
+	// Link to previous result or result set for paginated results.
+	PreviousLink string `json:"previousLink"`
 
 	// An array of items -  this is the actual data.
 	Items []json.RawMessage `json:"items"`
@@ -228,11 +228,11 @@ type Error struct {
 	// Integer code representing an error code
 	Code int `json:"code"`
 
-	// An array of error message item data.
-	Errors []ErrorItem `json:"errors"`
-
 	// Message for error.
 	Message string `json:"message"`
+
+	// An array of error message item data.
+	Errors []ErrorItem `json:"errors"`
 }
 
 // Shortcut to create Error.
@@ -245,11 +245,11 @@ func NewError() *Error {
 // For more details see
 // https://google-styleguide.googlecode.com/svn/trunk/jsoncstyleguide.xml
 type ErrorItem struct {
-	ExtendedHelper string `json:"extendedHelper"`
-	Domains        string `json:"domain"`
-	Location       string `json:"location"`
-	LocationType   string `json:"locationType"`
-	Message        string `json:"message"`
-	Reason         string `json:"reason"`
-	SendReport     string `json:"sendReport"`
+	Message        string `json:"message,omitempty"`
+	Location       string `json:"location,omitempty"`
+	LocationType   string `json:"locationType,omitempty"`
+	ExtendedHelper string `json:"extendedHelper,omitempty"`
+	Domains        string `json:"domain,omitempty"`
+	Reason         string `json:"reason,omitempty"`
+	SendReport     string `json:"sendReport,omitempty"`
 }

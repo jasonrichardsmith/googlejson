@@ -8,9 +8,7 @@
 	},
 	"data":{
 		"kind": "car",
-		"title": "My cars",
-		"description": "This service shows my cars",
-		"fields": "color, type",
+		"fields": "color,type",
 		"etag": "08FQn8-eil7ImA9WxZbFEwo",
 		"id": "0000001",
 		"lang": "en",
@@ -39,8 +37,6 @@
 		"errors": [
 			{
 				"message": "Car Not Found",
-				"location": "",
-				"locationType": "",
 				"extendedHelper": "http://url.to.more.details.example.com/",
 				"sendReport": "http://report.example.com/"
 			}
