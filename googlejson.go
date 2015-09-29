@@ -39,15 +39,15 @@ type Response struct {
 	Params map[string]string `json:"params"`
 
 	// Data holds the actual data that was returned.
-	*Data `json:"datai, omitempty"`
+	Data `json:"data, omitempty"`
 
 	// Errors to be returned.
-	*Error `json:"error, omitempty"`
+	Error `json:"error, omitempty"`
 }
 
 // Shortcut to create a new Response
 func New() *Response {
-	r := Response{Params: make(map[string]string), Data: NewData()}
+	r := Response{Params: make(map[string]string), Data: *NewData()}
 	return &r
 }
 
