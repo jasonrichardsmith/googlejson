@@ -29,7 +29,7 @@ You can also easily write to a http.ResponseWriter
 	}
 
 Or just to a byte slice
-	
+
 	gresp := googlejson.New()
 	gresp.APIVersion = "1.2"
 	b := gresp.Write()
@@ -37,4 +37,5 @@ Or just to a byte slice
 
 All the data for the API is stored in Response.Data.Items.  These will always be stored as []json.RawMessage
 which can be retrieved or set with the AddItem, CurrentItem and NextItem methods.
-	
+*/
+package googlejson
