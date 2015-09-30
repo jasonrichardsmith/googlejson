@@ -64,7 +64,7 @@ func NewFromResponse(r http.Response) (*Response, error) {
 }
 
 // Shortcut to create a copy of the response.  This
-// means you can set common settings, and resuse the base Response.
+// means you can set common settings, and re-use the base Response.
 func (r *Response) Copy() *Response {
 	nr := Response{
 		APIVersion: r.APIVersion,
