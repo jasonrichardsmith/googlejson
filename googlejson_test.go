@@ -7,13 +7,10 @@ package googlejson
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
-	//"github.com/davecgh/go-spew/spew"
 	"io/ioutil"
 	"log"
-	//"reflect"
-	//"net/http/httptest"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 )
@@ -108,8 +105,88 @@ func TestNewFromResponse(t *testing.T) {
 }
 
 func TestWrite(t *testing.T) {
-	b, _ := sample_struct.Write()
+	b, err := sample_struct.Write()
+	if err != nil {
+		log.Fatal(err)
+	}
 	if string(b) != string(sample_json) {
+		t.Error("Test failed")
+	}
+}
+
+func TestWriteToResponse(t *testing.T) {
+	w := httptest.NewRecorder()
+	err := sample_struct.WriteToResponse(w)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if string(sample_json) != w.Body.String() {
+		t.Error("Test failed")
+	}
+}
+
+func TestAddField(t *testing.T) {
+	d := NewData()
+	d.AddField("field1")
+	if d.Fields != "field1" {
+		t.Error("Test failed")
+	}
+	d.AddField("field2")
+	if d.Fields != "field1,field2" {
+		t.Error("Test failed")
+	}
+}
+
+func TestAddFields(t *testing.T) {
+	d := NewData()
+	fields := []string{"field3", "field4"}
+	d.AddFields(fields)
+	if d.Fields != "field3,field4" {
+		t.Error("Test failed")
+	}
+}
+
+func TestAddItem(t *testing.T) {
+	i := CarItem{"red", "SUV"}
+	d := NewData()
+	err := d.AddItem(i)
+	if err != nil {
+		log.Fatal(err)
+	}
+	c := d.ItemsCount() - 1
+	j := d.Items[c]
+	if string(j) != `{"color":"red","type":"SUV"}` {
+		t.Error("Test failed")
+	}
+}
+
+func TestNextItem(t *testing.T) {
+	i := CarItem{"red", "SUV"}
+	d := NewData()
+	err := d.AddItem(i)
+	if err != nil {
+		log.Fatal(err)
+	}
+	j := CarItem{"green", "hatchback"}
+	err = d.AddItem(j)
+	if err != nil {
+		log.Fatal(err)
+	}
+	d.ResetItems()
+	k := new(CarItem)
+	err = d.CurrentItem(k)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if i != *k {
+		t.Error("Test failed")
+	}
+	l := new(CarItem)
+	err = d.NextItem(l)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if j != *l {
 		t.Error("Test failed")
 	}
 }
