@@ -83,14 +83,14 @@ func init() {
 
 }
 
-func TestNewFromResponse(t *testing.T) {
+func TestNewFromHTTPResponse(t *testing.T) {
 	f, err := os.Open("googlejson.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 	r := http.Response{Body: f}
 	var response *Response
-	response, err = NewFromResponse(r)
+	response, err = NewFromHTTPResponse(r)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -114,9 +114,9 @@ func TestWrite(t *testing.T) {
 	}
 }
 
-func TestWriteToResponse(t *testing.T) {
+func TestWriteToHTTPResponse(t *testing.T) {
 	w := httptest.NewRecorder()
-	err := sample_struct.WriteToResponse(w)
+	err := sample_struct.WriteToHTTPResponse(w)
 	if err != nil {
 		log.Fatal(err)
 	}

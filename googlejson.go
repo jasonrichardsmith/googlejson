@@ -52,7 +52,7 @@ func New() *Response {
 }
 
 // Shortcut to create a response from an http.Response
-func NewFromResponse(r http.Response) (*Response, error) {
+func NewFromHTTPResponse(r http.Response) (*Response, error) {
 	res := New()
 	defer r.Body.Close()
 	body, err := ioutil.ReadAll(r.Body)
@@ -82,7 +82,7 @@ func (r *Response) Write() ([]byte, error) {
 }
 
 // Shortcut to write to an http.ResponseWriter.
-func (r *Response) WriteToResponse(w http.ResponseWriter) error {
+func (r *Response) WriteToHTTPResponse(w http.ResponseWriter) error {
 	b, err := r.Write()
 	if err != nil {
 		return err
