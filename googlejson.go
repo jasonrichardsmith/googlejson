@@ -87,8 +87,7 @@ func (r *Response) WriteToHTTPResponse(w http.ResponseWriter) error {
 	if err != nil {
 		return err
 	}
-	w.Write(b)
-	return nil
+	return w.Write(b)
 }
 
 // Data structure holds all information specific to the data in the
@@ -164,16 +163,11 @@ func NewData() *Data {
 }
 
 // Add a single field to the list of fields to be returned.
-func (d *Data) AddField(key string) {
+func (d *Data) AddField(keys ...string) {
 	fs := d.GetFields()
-	fs = append(fs, key)
-	d.Fields = strings.Join(fs, ",")
-}
-
-// Add a list of fields to the list of fields to be returned.
-func (d *Data) AddFields(keys []string) {
-	fs := d.GetFields()
-	fs = append(fs, keys...)
+	for _, key := range keys {
+		fs = append(fs, key)
+	}
 	d.Fields = strings.Join(fs, ",")
 }
 

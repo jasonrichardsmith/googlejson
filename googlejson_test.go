@@ -135,13 +135,9 @@ func TestAddField(t *testing.T) {
 	if d.Fields != "field1,field2" {
 		t.Error("Test failed")
 	}
-}
-
-func TestAddFields(t *testing.T) {
-	d := NewData()
 	fields := []string{"field3", "field4"}
-	d.AddFields(fields)
-	if d.Fields != "field3,field4" {
+	d.AddField(fields...)
+	if d.Fields != "field1,field2,field3,field4" {
 		t.Error("Test failed")
 	}
 }
