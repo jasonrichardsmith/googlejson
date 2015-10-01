@@ -18,14 +18,14 @@ You can easily utilize this to marshal results from an http.Reponse
 	if err != nil {
 		log.Fatal(err)
 	}
-	gresp, err := googlejson.NewFromResponse(res)
+	gresp, err := googlejson.NewFromHTTPResponse(res)
 
 You can also easily write to a http.ResponseWriter
 
 	func MyHandle(w http.ResponseWriter, r *http.Request) {
 		gresp := googlejson.New()
 		gresp.APIVersion = "1.2"
-		gresp.WriteToResponse(w)
+		gresp.WriteToHTTPResponse(w)
 	}
 
 Or just to a byte slice
