@@ -25,7 +25,7 @@ You can also easily write to a http.ResponseWriter
 	func MyHandle(w http.ResponseWriter, r *http.Request) {
 		gresp := googlejson.New()
 		gresp.APIVersion = "1.2"
-		gresp.WriteToHTTPResponse(w)
+		code, err:= gresp.WriteToHTTPResponse(w)
 	}
 
 Or just to a byte slice

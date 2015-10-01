@@ -82,10 +82,10 @@ func (r *Response) Write() ([]byte, error) {
 }
 
 // Shortcut to write to an http.ResponseWriter.
-func (r *Response) WriteToHTTPResponse(w http.ResponseWriter) error {
+func (r *Response) WriteToHTTPResponse(w http.ResponseWriter) (int, error) {
 	b, err := r.Write()
 	if err != nil {
-		return err
+		return 0, err
 	}
 	return w.Write(b)
 }
@@ -180,11 +180,13 @@ func (d *Data) GetFields() []string {
 }
 
 // Add a single data item to the list of Items to be returned.
-func (d *Data) AddItem(i interface{}) error {
-	js, err := json.Marshal(i)
-	d.Items = append(d.Items, js)
-	if err != nil {
-		return err
+func (d *Data) AddItem(items ...interface{}) error {
+	for _, item := range items {
+		js, err := json.Marshal(item)
+		if err != nil {
+			return err
+		}
+		d.Items = append(d.Items, js)
 	}
 	d.SetItemCount()
 	return nil
