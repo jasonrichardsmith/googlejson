@@ -104,8 +104,8 @@ func TestNewFromHTTPResponse(t *testing.T) {
 	}
 }
 
-func TestWrite(t *testing.T) {
-	b, err := sample_struct.Write()
+func TestJSONBytes(t *testing.T) {
+	b, err := sample_struct.JSONBytes()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -116,7 +116,7 @@ func TestWrite(t *testing.T) {
 
 func TestWriteToHTTPResponse(t *testing.T) {
 	w := httptest.NewRecorder()
-	err := sample_struct.WriteToHTTPResponse(w)
+	_, err := sample_struct.WriteToHTTPResponse(w)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -143,16 +143,19 @@ func TestAddField(t *testing.T) {
 }
 
 func TestAddItem(t *testing.T) {
-	i := CarItem{"red", "SUV"}
+	oneitem := CarItem{"red", "SUV"}
+	tests := []string{
+		`{"color":"red","type":"SUV"}`,
+	}
 	d := NewData()
-	err := d.AddItem(i)
+	err := d.AddItem(oneitem)
 	if err != nil {
 		log.Fatal(err)
 	}
-	c := d.ItemsCount() - 1
-	j := d.Items[c]
-	if string(j) != `{"color":"red","type":"SUV"}` {
-		t.Error("Test failed")
+	for i, test := range tests {
+		if string(d.Items[i]) != test {
+			t.Error("Test failed")
+		}
 	}
 }
 

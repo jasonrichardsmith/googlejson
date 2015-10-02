@@ -76,14 +76,14 @@ func (r *Response) Copy() *Response {
 
 // Write the struct to byte[].
 // SetItemCount will be called prior to writing.
-func (r *Response) Write() ([]byte, error) {
+func (r *Response) JSONBytes() ([]byte, error) {
 	r.Data.SetItemCount()
 	return json.Marshal(r)
 }
 
 // Shortcut to write to an http.ResponseWriter.
 func (r *Response) WriteToHTTPResponse(w http.ResponseWriter) (int, error) {
-	b, err := r.Write()
+	b, err := r.JSONBytes()
 	if err != nil {
 		return 0, err
 	}
@@ -158,7 +158,7 @@ type Data struct {
 
 // Shortcut to new data object.
 func NewData() *Data {
-	d := Data{Items: make([]json.RawMessage, 0)}
+	d := Data{}
 	return &d
 }
 
@@ -180,14 +180,12 @@ func (d *Data) GetFields() []string {
 }
 
 // Add a single data item to the list of Items to be returned.
-func (d *Data) AddItem(items ...interface{}) error {
-	for _, item := range items {
-		js, err := json.Marshal(item)
-		if err != nil {
-			return err
-		}
-		d.Items = append(d.Items, js)
+func (d *Data) AddItem(item interface{}) error {
+	js, err := json.Marshal(item)
+	if err != nil {
+		return err
 	}
+	d.Items = append(d.Items, js)
 	d.SetItemCount()
 	return nil
 }
