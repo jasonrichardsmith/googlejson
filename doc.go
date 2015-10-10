@@ -1,5 +1,5 @@
 // Copyright 2015 Jason Richard Smith.
-// Use of this source code is governed by a GPL-3
+// Use of this source code is governed by a LGPL-3
 // license that can be found in the LICENSE file.
 
 // Package googlejson implements json structure defined
